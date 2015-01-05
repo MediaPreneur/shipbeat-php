@@ -11,13 +11,8 @@ class Shipbeat_Areas
 
     public function query($params)
     {
-        $transport = new Shipbeat_Transport();
+        $transport = new Shipbeat_Transport($this->shipbeat);
         $response = $transport->get('/areas', $params);
-
-        if ($transport->pagination) {
-            $this->shipbeat->pagination = $transport->pagination;
-        }
-
         return $response;
     }
 }

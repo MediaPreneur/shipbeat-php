@@ -11,7 +11,7 @@ class Shipbeat_Deliveries
 
     public function create($params)
     {
-        $transport = new Shipbeat_Transport();
+        $transport = new Shipbeat_Transport($this->shipbeat);
         $response = $transport->post('/deliveries', $params);
         return $response;
     }
