@@ -1,0 +1,10 @@
+# General files and folders
+.idea
+.DS_Store
+Thumbs.db
+
+# Composer files
+/vendor
+composer.phar
+composer.lock
+
