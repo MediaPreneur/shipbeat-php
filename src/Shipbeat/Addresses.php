@@ -11,13 +11,13 @@ class Shipbeat_Addresses
         $this->endpoint = 'addresses';
     }
 
-    public function all()
+    public function get($id, $parameters = null)
     {
-        return $this->request->get($this->endpoint);
+        return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }
 
-    public function create($postFields = [])
+    public function create($parameters = null)
     {
-        return $this->request->post($this->endpoint, $postFields);
+        return $this->request->post($this->endpoint, $parameters);
     }
 }

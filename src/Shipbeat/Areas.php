@@ -16,8 +16,8 @@ class Shipbeat_Areas
         return $this->request->get($this->endpoint, $parameters);
     }
 
-    public function get($id)
+    public function get($id, $parameters = null)
     {
-        return $this->request->get($this->endpoint . '/' . $id);
+        return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }
 }
