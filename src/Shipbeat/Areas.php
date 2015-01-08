@@ -2,17 +2,22 @@
 
 class Shipbeat_Areas
 {
-    public $shipbeat;
+    private $endpoint;
+    private $request;
 
-    public function __construct($shipbeat)
+    function __construct($request)
     {
-        $this->shipbeat = $shipbeat;
+        $this->request = $request;
+        $this->endpoint = 'areas';
     }
 
-    public function query($params)
+    public function all($parameters = null)
     {
-        $transport = new Shipbeat_Transport($this->shipbeat);
-        $response = $transport->get('/areas', $params);
-        return $response;
+        return $this->request->get($this->endpoint, $parameters);
+    }
+
+    public function get($id)
+    {
+        return $this->request->get($this->endpoint . '/' . $id);
     }
 }
