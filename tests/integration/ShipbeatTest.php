@@ -1,20 +1,20 @@
 <?php
 
-class ShipbeatContextTest extends PHPUnit_Framework_TestCase
+class ShipbeatTest extends PHPUnit_Framework_TestCase
 {
-    private $shipbeatContext;
+    private $shipbeat;
     private $token = 'LEiyY7NYj2JRN58C04RfKn6P3u1';
     private $mode = 'test';
 
     protected function setUp()
     {
-        $this->shipbeatContext = new ShipbeatContext($this->token, $this->mode);
+        $this->shipbeat = new Shipbeat($this->token, $this->mode);
         parent::setUp();
     }
 
     public function testAreasAll()
     {
-        $areas = $this->shipbeatContext->areas()->all();
+        $areas = $this->shipbeat->areas()->all();
         $this->assertEquals(200, $areas['code']);
     }
 
@@ -26,7 +26,7 @@ class ShipbeatContextTest extends PHPUnit_Framework_TestCase
             'sort' => 'code',
             'limit' => 5,
             'offset' => 2);
-        $areas = $this->shipbeatContext->areas()->all($params);
+        $areas = $this->shipbeat->areas()->all($params);
         $this->assertEquals(200, $areas['code']);
         $this->assertEquals(5, sizeof($areas['response']));
         $this->assertArrayHasKey('total_count', $areas);
@@ -34,7 +34,7 @@ class ShipbeatContextTest extends PHPUnit_Framework_TestCase
 
     public function testAreasGet()
     {
-        $areas = $this->shipbeatContext->areas()->get('eGp5QjMKkKITHcfyqIy7aB');
+        $areas = $this->shipbeat->areas()->get('eGp5QjMKkKITHcfyqIy7aB');
         $this->assertEquals(200, $areas['code']);
     }
 
@@ -49,14 +49,14 @@ class ShipbeatContextTest extends PHPUnit_Framework_TestCase
 //            'country_code' => 'DK'
 //        );
 //
-//        $addresses = $this->shipbeatContext->addresses()->create($postFields);
+//        $addresses = $this->shipbeat->addresses()->create($postFields);
 //
 //        $this->assertEquals(1, $addresses);
 //    }
 
 //    public function testAddresses()
 //    {
-//        $addresses = $this->shipbeatContext->addresses()->all();
+//        $addresses = $this->shipbeat>addresses()->all();
 //        $this->assertEquals(1, $addresses);
 //    }
 
@@ -67,8 +67,8 @@ class ShipbeatContextTest extends PHPUnit_Framework_TestCase
 //            'value' => 179
 //        );
 //
-////        $items = $this->shipbeatContext->items()->create($postFields);
-//        $items = $this->shipbeatContext->items()->all();
+////        $items = $this->shipbeat->items()->create($postFields);
+//        $items = $this->shipbeat->items()->all();
 //        $this->assertEquals(1, $items);
 //    }
 

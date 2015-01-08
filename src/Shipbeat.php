@@ -1,6 +1,6 @@
 <?php
 
-class ShipbeatContext
+class Shipbeat
 {
     private $addresses;
     private $items;
@@ -14,7 +14,7 @@ class ShipbeatContext
             else
                 $domain = 'https://api.shipbeat.com';
 
-        $request = new Shipbeat_HttpCurlRequest($token, $mode, $domain);
+        $request = new Shipbeat_Transport($token, $mode, $domain);
 
         $this->areas = new Shipbeat_Areas($request);
         $this->addresses = new Shipbeat_Addresses($request);
