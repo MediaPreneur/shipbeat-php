@@ -3,42 +3,19 @@
 /**
  * Class Shipbeat_Items
  */
-class Shipbeat_Items
+class Shipbeat_Items extends Shipbeat_Base
 {
-    /**
-     * @var string
-     */
-    private $endpoint;
-    /**
-     * @var Shipbeat_Transport
-     */
-    private $request;
-
     /**
      * @param $request
      */
     function __construct($request)
     {
-        $this->request = $request;
+        parent::__construct($request);
         $this->endpoint = 'items';
     }
 
-    /**
-     * @param $id
-     * @param null $parameters
-     * @return mixed
-     */
-    public function get($id, $parameters = null)
+    function all($parameteres = null)
     {
-        return $this->request->get($this->endpoint . '/' . $id, $parameters);
-    }
-
-    /**
-     * @param null $parameters
-     * @return mixed
-     */
-    public function create($parameters = null)
-    {
-        return $this->request->post($this->endpoint, $parameters);
+        throw new Exception('Not implemented');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class Shipbeat_Addresses
+ * Class Shipbeat_Quotes
  */
-class Shipbeat_Addresses extends Shipbeat_Base
+class Shipbeat_Quotes extends Shipbeat_Base
 {
     /**
      * @param $request
@@ -11,7 +11,7 @@ class Shipbeat_Addresses extends Shipbeat_Base
     function __construct($request)
     {
         parent::__construct($request);
-        $this->endpoint = 'addresses';
+        $this->endpoint = 'quotes';
     }
 
     function all($parameteres = null)

@@ -1,18 +1,21 @@
 <?php
 
-class Shipbeat_Deliveries
+/**
+ * Class Shipbeat_Deliveries
+ */
+class Shipbeat_Deliveries extends Shipbeat_Base
 {
-    public $shipbeat;
-
-    public function __construct($shipbeat)
+    /**
+     * @param $request
+     */
+    function __construct($request)
     {
-        $this->shipbeat = $shipbeat;
+        parent::__construct($request);
+        $this->endpoint = 'deliveries';
     }
 
-    public function create($params)
+    function all($parameteres = null)
     {
-        $transport = new Shipbeat_Transport($this->shipbeat);
-        $response = $transport->post('/deliveries', $params);
-        return $response;
+        throw new Exception('Not implemented');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class Shipbeat_Addresses
+ * Class Shipbeat_Carriers
  */
-class Shipbeat_Addresses extends Shipbeat_Base
+class Shipbeat_Carriers extends Shipbeat_Base
 {
     /**
      * @param $request
@@ -11,10 +11,10 @@ class Shipbeat_Addresses extends Shipbeat_Base
     function __construct($request)
     {
         parent::__construct($request);
-        $this->endpoint = 'addresses';
+        $this->endpoint = 'carriers';
     }
 
-    function all($parameteres = null)
+    function create($parameteres = null)
     {
         throw new Exception('Not implemented');
     }
