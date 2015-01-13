@@ -21,11 +21,11 @@ class Shipbeat_CarrierProducts extends Shipbeat_Base
 
     function all($parameteres = null)
     {
-        throw new Exception('Not implemented');
+        throw new Shipbeat_NotImplementedException(__METHOD__);
     }
 
     function create($parameteres = null)
     {
-        throw new Exception('Not implemented');
+        throw new Shipbeat_NotImplementedException(__METHOD__);
     }
 }

@@ -16,6 +16,6 @@ class Shipbeat_Carriers extends Shipbeat_Base
 
     function create($parameteres = null)
     {
-        throw new Exception('Not implemented');
+        throw new Shipbeat_NotImplementedException(__METHOD__);
     }
 }

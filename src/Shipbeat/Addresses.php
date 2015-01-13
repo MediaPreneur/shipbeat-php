@@ -16,6 +16,6 @@ class Shipbeat_Addresses extends Shipbeat_Base
 
     function all($parameteres = null)
     {
-        throw new Exception('Not implemented');
+        throw new Shipbeat_NotImplementedException(__METHOD__);
     }
 }
