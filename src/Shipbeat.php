@@ -55,6 +55,11 @@ class Shipbeat
      */
     private $carrierProducts;
 
+    /*
+     * @var string
+     */
+    private $totalCount;
+
     /**
      * @param $token
      * @param $mode
@@ -70,7 +75,7 @@ class Shipbeat
                 $domain = 'https://api.shipbeat.com';
             }
 
-        $request = new Shipbeat_Transport($token, $mode, $domain);
+        $request = new Shipbeat_Transport($token, $mode, $domain, $this);
 
         $this->items = new Shipbeat_Items($request);
         $this->areas = new Shipbeat_Areas($request);
@@ -164,4 +169,22 @@ class Shipbeat
     {
         return $this->carrierProducts;
     }
+
+    /**
+     * @param int $totalCount
+     */
+    public function setTotalCount($totalCount)
+    {
+        $this->totalCount = $totalCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalCount()
+    {
+        return $this->totalCount;
+    }
+
+
 }

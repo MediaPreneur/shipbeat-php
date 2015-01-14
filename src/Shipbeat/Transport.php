@@ -19,15 +19,26 @@ class Shipbeat_Transport
     private $mode;
 
     /**
+     * @var Shipbeat
+     */
+    private $shipbeat;
+
+    /**
      * @param $token
      * @param $mode
      * @param $domain
      */
-    function __construct($token, $mode, $domain)
+    function __construct($authData, $mode, $domain, Shipbeat $shipbeat)
     {
-        $this->token = $token;
         $this->mode = $mode;
         $this->domain = $domain;
+        $this->shipbeat = $shipbeat;
+        if (is_array($authData))
+            $this->token = $this->generateNewToken($authData, $domain);
+        else
+            $this->token = $authData;
+
+
     }
 
     /**
@@ -85,16 +96,15 @@ class Shipbeat_Transport
 
         $result = $this->curl_exec($ch);
 
-        $code = $this->curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $headers = $this->getHeaders($result);
-        $body = json_decode(substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE)));
+        $body = json_decode(substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE)), true);
 
         curl_close($ch);
 
-        // create response with total_count if exists
-        $response = array('code' => $code, 'response' => $body);
+        // create response and set total_count if exists to Shipbeat
+        $response = array('code' => $headers['http_code'], 'response' => $body);
         if (array_key_exists('X-Total-Count', $headers))
-            $response['total_count'] = $headers['X-Total-Count'];
+            $this->shipbeat->setTotalCount($headers['X-Total-Count']);
 
         return $response;
     }
@@ -138,5 +148,22 @@ class Shipbeat_Transport
     protected function curl_getinfo($ch, $option)
     {
         return curl_getinfo($ch, $option);
+    }
+
+    /**
+     * @param $authArray
+     * @return mixed
+     */
+    private function generateNewToken($authArray)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->domain . '/tokens');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . base64_encode($authArray['username'] . ':' . $authArray['password']), 'Content-Length: 0']);
+        $result = $this->curl_exec($ch);
+
+        return json_decode($result, true)['key'];
     }
 }
