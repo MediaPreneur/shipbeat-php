@@ -19,20 +19,14 @@ class Shipbeat_Transport
     private $mode;
 
     /**
-     * @var Shipbeat
-     */
-    private $shipbeat;
-
-    /**
      * @param $token
      * @param $mode
      * @param $domain
      */
-    function __construct($authData, $mode, $domain, Shipbeat $shipbeat)
+    function __construct($authData, $mode, $domain)
     {
         $this->mode = $mode;
         $this->domain = $domain;
-        $this->shipbeat = $shipbeat;
         if (is_array($authData))
             $this->token = $this->generateNewToken($authData, $domain);
         else
