@@ -74,11 +74,15 @@ class Shipbeat_Transport
         // prepare parameters
         if (!is_null($parameters)) {
             $queryParameters = http_build_query($parameters);
-            if ($method == 'POST')
+            if ($method == 'POST') {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $queryParameters);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Length: ' . strlen($queryParameters)]);
+            }
             if ($method == 'GET')
                 $endpoint = $endpoint . '?' . $queryParameters;
-        }
+        } elseif (is_null($parameters) && $method == 'POST')
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Length: 0']);
+
 
         // set verification only in live mode
         if ($this->mode == 'test')
