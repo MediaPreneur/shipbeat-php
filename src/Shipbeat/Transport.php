@@ -97,14 +97,19 @@ class Shipbeat_Transport
         $result = $this->curl_exec($ch);
 
         $headers = $this->getHeaders($result);
-        $body = json_decode(substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE)), true);
+        $body = substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE));
 
         curl_close($ch);
 
         // create response and set total_count if exists to Shipbeat
-        $response = array('code' => $headers['http_code'], 'response' => $body);
-        if (array_key_exists('X-Total-Count', $headers))
-            $this->shipbeat->setTotalCount($headers['X-Total-Count']);
+        if (array_key_exists('X-Total-Count', $headers)) {
+            $response = new stdClass();
+            $response->pagination = array('total' => $headers['X-Total-Count']);
+            $response->data = json_decode($body);
+        } else
+            $response = json_decode($body);
+
+        var_dump($response);
 
         return $response;
     }
