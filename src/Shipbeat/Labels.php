@@ -23,10 +23,10 @@ class Shipbeat_Labels
      * @param null $parameters
      * @return string
      */
-    public function get($id, $parameters = null)
+    public function get($id, $parameters = [])
     {
         $queryParameters = '';
-        if (!is_null($parameters)) {
+        if (!empty($parameters)) {
             $queryParameters = '?' . http_build_query($parameters);
         }
         return $this->domain . '/' . $id . $queryParameters;
@@ -38,10 +38,10 @@ class Shipbeat_Labels
      * @param null $parameters
      * @return string
      */
-    public function getLabelForItem($labelId, $itemId, $parameters = null)
+    public function getLabelForItem($labelId, $itemId, $parameters = [])
     {
         $queryParameters = '';
-        if (!is_null($parameters)) {
+        if (!empty($parameters)) {
             $queryParameters = '?' . http_build_query($parameters);
         }
         return $this->domain . '/' . $labelId . '/' . $itemId . $queryParameters;

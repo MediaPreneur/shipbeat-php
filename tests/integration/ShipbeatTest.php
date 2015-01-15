@@ -16,6 +16,7 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
     private $authData = "Your Shipbeat API token or array('username' => Your username,
     'password' => Your password)";
 
+
     /**
      * @var string
      */
@@ -71,10 +72,9 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
             'item' => $items->id, 'from' => $addressesFrom->id, 'to' => $addressesTo->id);
         $quotes = $this->shipbeat->quotes()->create($quotesParams);
         $this->assertNotNull($quotes);
-        $this->assertInternalType('array', $quotes);
+        $this->assertInstanceOf('stdClass', $quotes);
 
-
-        $deliveriesParams = array('quote' => $quotes[0]->id);
+        $deliveriesParams = array('quote' => $quotes->data[0]->id);
         $deliveries = $this->shipbeat->deliveries()->create($deliveriesParams);
         $this->assertNotNull($deliveries);
         $this->assertInstanceOf('stdClass', $deliveries);

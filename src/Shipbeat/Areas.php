@@ -8,12 +8,12 @@ class Shipbeat_Areas
     /**
      * @var string
      */
-    private  $endpoint;
+    private $endpoint;
 
     /**
      * @var Shipbeat_Transport
      */
-    private  $request;
+    private $request;
 
     /**
      * @param $request
@@ -28,8 +28,14 @@ class Shipbeat_Areas
      * @param null $parameters
      * @return mixed
      */
-    public function all($parameters = null)
+    public function all($parameters = [])
     {
+        if (!array_key_exists('limit', $parameters)) {
+            $parameters['limit'] = 20;
+        }
+        if (!array_key_exists('offset', $parameters)) {
+            $parameters['offset'] = 0;
+        }
         return $this->request->get($this->endpoint, $parameters);
     }
 
@@ -38,7 +44,7 @@ class Shipbeat_Areas
      * @param null $parameters
      * @return mixed
      */
-    public function get($id, $parameters = null)
+    public function get($id, $parameters = [])
     {
         return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }

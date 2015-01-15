@@ -29,7 +29,7 @@ class Shipbeat_Quotes
      * @param null $parameters
      * @return mixed
      */
-    public function get($id, $parameters = null)
+    public function get($id, $parameters = [])
     {
         return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }
@@ -38,7 +38,7 @@ class Shipbeat_Quotes
      * @param null $parameters
      * @return mixed
      */
-    public function create($parameters = null)
+    public function create($parameters = [])
     {
         return $this->request->post($this->endpoint, $parameters);
     }

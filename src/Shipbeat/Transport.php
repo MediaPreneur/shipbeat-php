@@ -42,7 +42,7 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    public function get($endpoint, $parameters = null)
+    public function get($endpoint, $parameters = [])
     {
         return $this->baseRequestMethod($endpoint, 'GET', false, $parameters);
     }
@@ -52,7 +52,7 @@ class Shipbeat_Transport
      * @param null $postFields
      * @return array
      */
-    public function post($endpoint, $postFields = null)
+    public function post($endpoint, $postFields = [])
     {
         return $this->baseRequestMethod($endpoint, 'POST', false, $postFields);
     }
@@ -62,7 +62,7 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    public function getRaw($endpoint, $parameters = null)
+    public function getRaw($endpoint, $parameters = [])
     {
         return $this->baseRequestMethod($endpoint, 'GET', true, $parameters);
     }
@@ -73,12 +73,12 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    private function baseRequestMethod($endpoint, $method, $isRaw, $parameters = null)
+    private function baseRequestMethod($endpoint, $method, $isRaw, $parameters = [])
     {
         $ch = curl_init();
 
         // prepare parameters
-        if (!is_null($parameters)) {
+        if (!empty($parameters)) {
             $queryParameters = http_build_query($parameters);
             if ($method == 'POST') {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $queryParameters);
@@ -88,7 +88,7 @@ class Shipbeat_Transport
             if ($method == 'GET') {
                 $endpoint = $endpoint . '?' . $queryParameters;
             }
-        } elseif (is_null($parameters) && $method == 'POST') {
+        } elseif ((empty($parameters)) && $method == 'POST') {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: 0'));
         }
 
@@ -128,13 +128,22 @@ class Shipbeat_Transport
             $this->checkResponseCode($code, $body);
         }
 
-        // create response and set total_count if exists to Shipbeat
+        // create response and set total_count if exists
         if (array_key_exists('X-Total-Count', $headers)) {
             $response = new stdClass();
-            $response->pagination = array('total' => (int)$headers['X-Total-Count']);
+            $response->pagination = array('total' => (int)$headers['X-Total-Count'],
+                'limit' => $parameters['limit'], 'offset' => $parameters['offset']);
+//            }
             $response->data = json_decode($body);
+            $response->count = count($response->data);
         } else {
             $response = json_decode($body);
+            if (is_array($response)) {
+                $newResponse = new stdClass();
+                $newResponse->count = count($response);
+                $newResponse->data = $response;
+                $response = $newResponse;
+            }
         }
         return $response;
     }
