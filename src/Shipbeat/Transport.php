@@ -107,8 +107,6 @@ class Shipbeat_Transport
         } else
             $response = json_decode($body);
 
-        var_dump($response);
-
         return $response;
     }
 

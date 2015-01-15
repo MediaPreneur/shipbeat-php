@@ -22,11 +22,11 @@ class Shipbeat_TransportTest extends PHPUnit_Framework_TestCase
 
         $this->transport->expects($this->any())
             ->method('curl_exec')
-            ->will($this->returnValue('response'));
+            ->will($this->returnValue('{"response":true}'));
 
         $this->transport->expects($this->any())
             ->method('curl_getinfo')
-            ->will($this->returnValue(200));
+            ->will($this->returnValue(0));
 
         parent::setUp();
     }
@@ -46,7 +46,7 @@ class Shipbeat_TransportTest extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         $result = $this->transport->get('');
-        $this->assertEquals(200, $result['code']);
+        $this->assertInstanceOf('stdClass', $result);
     }
 
     /**
@@ -55,6 +55,6 @@ class Shipbeat_TransportTest extends PHPUnit_Framework_TestCase
     public function testPost()
     {
         $result = $this->transport->post('');
-        $this->assertEquals(200, $result['code']);
+        $this->assertInstanceOf('stdClass', $result);
     }
 }

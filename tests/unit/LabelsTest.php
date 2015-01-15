@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Shipbeat_Manifests test cases
+ * Shipbeat_Labels test cases
  */
-class Shipbeat_ManifestsTest extends PHPUnit_Framework_TestCase
+class Shipbeat_LabelsTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Shipbeat_Manifests
+     * @var Shipbeat_Labels
      */
-    private $manifests;
+    private $labels;
 
     /**
      * Prepares test object before running tests
@@ -18,7 +18,7 @@ class Shipbeat_ManifestsTest extends PHPUnit_Framework_TestCase
         $result = array('code' => 200, 'response' => 'body');
 
         $request = $this->getMockBuilder('Shipbeat_Transport')
-            ->setMethods(array('get'))
+            ->setMethods(array('get', 'post'))
             ->setConstructorArgs(array('token', 'mode', 'domain'))
             ->getMock();
 
@@ -26,7 +26,11 @@ class Shipbeat_ManifestsTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->will($this->returnValue($result));
 
-        $this->manifests = new Shipbeat_Manifests($request);
+        $request->expects($this->any())
+            ->method('post')
+            ->will($this->returnValue($result));
+
+        $this->labels = new Shipbeat_Labels($request);
         parent::setUp();
     }
 
@@ -35,18 +39,27 @@ class Shipbeat_ManifestsTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        $this->manifests = null;
+        $this->labels = null;
         parent::tearDown();
     }
 
     /**
      * Test get() method
      */
-    public function testManifestsGet()
+    public function testGet()
     {
-        $result = $this->manifests->get('id', 'location');
+        $result = $this->labels->get('id');
         $this->assertEquals(200, $result['code']);
         $this->assertEquals('body', $result['response']);
     }
 
+    /**
+     * Test create() method
+     */
+    public function testGetLabelForItem()
+    {
+        $result = $this->labels->getLabelForItem('id', 'item');
+        $this->assertEquals(200, $result['code']);
+        $this->assertEquals('body', $result['response']);
+    }
 }

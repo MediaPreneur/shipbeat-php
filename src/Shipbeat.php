@@ -36,6 +36,11 @@ class Shipbeat
     private $deliveries;
 
     /**
+     * @var Shipbeat_Labels
+     */
+    private $labels;
+
+    /**
      * @var Shipbeat_Manifests
      */
     private $manifests;
@@ -70,7 +75,14 @@ class Shipbeat
                 $domain = 'https://api.shipbeat.com';
             }
 
+        if ($mode == 'test')
+            $labelDomain = 'https://test.label.shipbeat.com';
+        else
+            $labelDomain = 'https://label.shipbeat.com';
+
+
         $request = new Shipbeat_Transport($token, $mode, $domain);
+        $labelRequest = new Shipbeat_Transport($token, $mode, $labelDomain);
 
         $this->items = new Shipbeat_Items($request);
         $this->areas = new Shipbeat_Areas($request);
@@ -78,7 +90,7 @@ class Shipbeat
         $this->addresses = new Shipbeat_Addresses($request);
         $this->quotes = new Shipbeat_Quotes($request);
         $this->deliveries = new Shipbeat_Deliveries($request);
-
+        $this->labels = new Shipbeat_Labels($labelRequest);
         $this->manifests = new Shipbeat_Manifests($request);
         $this->carriers = new Shipbeat_Carriers($request);
         $this->carrierServices = new Shipbeat_CarrierServices($request);
@@ -131,6 +143,14 @@ class Shipbeat
     public function deliveries()
     {
         return $this->deliveries;
+    }
+
+    /**
+     * @return Shipbeat_Labels
+     */
+    public function labels()
+    {
+        return $this->labels;
     }
 
     /**
