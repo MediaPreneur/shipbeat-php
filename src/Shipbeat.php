@@ -41,11 +41,6 @@ class Shipbeat
     private $labels;
 
     /**
-     * @var Shipbeat_Manifests
-     */
-    private $manifests;
-
-    /**
      * @var Shipbeat_Carriers
      */
     private $carriers;
@@ -61,28 +56,29 @@ class Shipbeat
     private $carrierProducts;
 
     /**
-     * @param $token
-     * @param $mode
+     * @param $authData
+     * @param null $mode
      * @param null $domain
      */
-    public function __construct($token, $mode = null, $domain = null)
+    public function __construct($authData, $mode = null, $domain = null)
     {
-        if (is_null($domain))
-            if ($mode == 'test')
+        if (is_null($domain)) {
+            if ($mode == 'test') {
                 $domain = 'https://test.api.shipbeat.com';
-            else {
+            } else {
                 $mode = 'live';
                 $domain = 'https://api.shipbeat.com';
             }
+        }
 
-        if ($mode == 'test')
+        if ($mode == 'test') {
             $labelDomain = 'https://test.label.shipbeat.com';
-        else
+        } else {
             $labelDomain = 'https://label.shipbeat.com';
+        }
 
 
-        $request = new Shipbeat_Transport($token, $mode, $domain);
-        $labelRequest = new Shipbeat_Transport($token, $mode, $labelDomain);
+        $request = new Shipbeat_Transport($authData, $mode, $domain);
 
         $this->items = new Shipbeat_Items($request);
         $this->areas = new Shipbeat_Areas($request);
@@ -90,8 +86,7 @@ class Shipbeat
         $this->addresses = new Shipbeat_Addresses($request);
         $this->quotes = new Shipbeat_Quotes($request);
         $this->deliveries = new Shipbeat_Deliveries($request);
-        $this->labels = new Shipbeat_Labels($labelRequest);
-        $this->manifests = new Shipbeat_Manifests($request);
+        $this->labels = new Shipbeat_Labels($labelDomain);
         $this->carriers = new Shipbeat_Carriers($request);
         $this->carrierServices = new Shipbeat_CarrierServices($request);
         $this->carrierProducts = new Shipbeat_CarrierProducts($request);
@@ -151,14 +146,6 @@ class Shipbeat
     public function labels()
     {
         return $this->labels;
-    }
-
-    /**
-     * @return Shipbeat_Manifests
-     */
-    public function manifests()
-    {
-        return $this->manifests;
     }
 
     /**

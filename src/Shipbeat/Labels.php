@@ -8,38 +8,42 @@ class Shipbeat_Labels
     /**
      * @var string
      */
-    protected $endpoint;
-    /**
-     * @var Shipbeat_Transport
-     */
-    protected $request;
+    protected $domain;
 
     /**
-     * @param $request
+     * @param $domain
      */
-    function __construct($request)
+    function __construct($domain)
     {
-        $this->request = $request;
+        $this->domain = $domain;
     }
 
     /**
      * @param $id
      * @param null $parameters
-     * @return mixed
+     * @return string
      */
     public function get($id, $parameters = null)
     {
-        return $this->request->get($this->endpoint . '/' . $id, $parameters);
+        $queryParameters = '';
+        if (!is_null($parameters)) {
+            $queryParameters = '?' . http_build_query($parameters);
+        }
+        return $this->domain . '/' . $id . $queryParameters;
     }
 
     /**
-     * @param $carrierId
-     * @param $locationId
+     * @param $labelId
+     * @param $itemId
      * @param null $parameters
-     * @return array
+     * @return string
      */
-    public function getLabelForItem($id, $item, $parameters = null)
+    public function getLabelForItem($labelId, $itemId, $parameters = null)
     {
-        return $this->request->get($this->endpoint . '/' . $id . '/' . $item, $parameters);
+        $queryParameters = '';
+        if (!is_null($parameters)) {
+            $queryParameters = '?' . http_build_query($parameters);
+        }
+        return $this->domain . '/' . $labelId . '/' . $itemId . $queryParameters;
     }
 }
