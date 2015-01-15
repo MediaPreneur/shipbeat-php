@@ -11,11 +11,17 @@ class Shipbeat_AreasTest extends PHPUnit_Framework_TestCase
     private $areas;
 
     /**
+     * @var stdClass
+     */
+    private $expected;
+
+    /**
      * Prepares test object before running tests
      */
     protected function setUp()
     {
-        $result = array('code' => 200, 'response' => 'body');
+        $this->expected = new stdClass();
+        $this->expected->response = 'response';
 
         $request = $this->getMockBuilder('Shipbeat_Transport')
             ->setMethods(array('get'))
@@ -24,7 +30,7 @@ class Shipbeat_AreasTest extends PHPUnit_Framework_TestCase
 
         $request->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($result));
+            ->will($this->returnValue($this->expected));
 
         $this->areas = new Shipbeat_Areas($request);
         parent::setUp();
@@ -45,8 +51,8 @@ class Shipbeat_AreasTest extends PHPUnit_Framework_TestCase
     public function testAreasAll()
     {
         $result = $this->areas->all();
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 
     /**
@@ -55,8 +61,8 @@ class Shipbeat_AreasTest extends PHPUnit_Framework_TestCase
     public function testAreasGet()
     {
         $result = $this->areas->get('id');
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 
 }

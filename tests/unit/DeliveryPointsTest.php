@@ -11,11 +11,17 @@ class Shipbeat_DeliveryPointsTest extends PHPUnit_Framework_TestCase
     private $deliveryPoints;
 
     /**
+     * @var stdClass
+     */
+    private $expected;
+
+    /**
      * Prepares test object before running tests
      */
     protected function setUp()
     {
-        $result = array('code' => 200, 'response' => 'body');
+        $this->expected = new stdClass();
+        $this->expected->response = 'response';
 
         $request = $this->getMockBuilder('Shipbeat_Transport')
             ->setMethods(array('get'))
@@ -24,7 +30,7 @@ class Shipbeat_DeliveryPointsTest extends PHPUnit_Framework_TestCase
 
         $request->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($result));
+            ->will($this->returnValue($this->expected));
 
         $this->deliveryPoints = new Shipbeat_DeliveryPoints($request);
         parent::setUp();
@@ -45,8 +51,8 @@ class Shipbeat_DeliveryPointsTest extends PHPUnit_Framework_TestCase
     public function testDeliveryPointsAll()
     {
         $result = $this->deliveryPoints->all();
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 
     /**
@@ -55,8 +61,8 @@ class Shipbeat_DeliveryPointsTest extends PHPUnit_Framework_TestCase
     public function testDeliveryPointsGet()
     {
         $result = $this->deliveryPoints->get('id');
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 
 }

@@ -11,11 +11,17 @@ class Shipbeat_AddressesTest extends PHPUnit_Framework_TestCase
     private $addresses;
 
     /**
+     * @var stdClass
+     */
+    private $expected;
+
+    /**
      * Prepares test object before running tests
      */
     protected function setUp()
     {
-        $result = array('code' => 200, 'response' => 'body');
+        $this->expected = new stdClass();
+        $this->expected->response = 'response';
 
         $request = $this->getMockBuilder('Shipbeat_Transport')
             ->setMethods(array('get', 'post'))
@@ -24,11 +30,11 @@ class Shipbeat_AddressesTest extends PHPUnit_Framework_TestCase
 
         $request->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($result));
+            ->will($this->returnValue($this->expected));
 
         $request->expects($this->any())
             ->method('post')
-            ->will($this->returnValue($result));
+            ->will($this->returnValue($this->expected));
 
         $this->addresses = new Shipbeat_Addresses($request);
         parent::setUp();
@@ -49,8 +55,8 @@ class Shipbeat_AddressesTest extends PHPUnit_Framework_TestCase
     public function testAddressesGet()
     {
         $result = $this->addresses->get('id');
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 
     /**
@@ -59,7 +65,7 @@ class Shipbeat_AddressesTest extends PHPUnit_Framework_TestCase
     public function testAddressesCreate()
     {
         $result = $this->addresses->create();
-        $this->assertEquals(200, $result['code']);
-        $this->assertEquals('body', $result['response']);
+        $this->assertInstanceOf('stdClass', $result);
+        $this->assertEquals($this->expected->response, $result->response);
     }
 }
