@@ -1,30 +1,26 @@
 <?php
 
+/**
+ * Class Shipbeat_Exception_APIFatalError
+ */
 class Shipbeat_Exception_APIFatalError extends Shipbeat_Exception_Base
 {
-    protected $message = '';
-    protected $description = '';
-    protected $code = '';
-
-    public function __construct($response)
+    /**
+     * @param null $message
+     */
+    public function __construct($message = null)
     {
-        var_dump($response);
-
-        if (array_key_exists('message', $response))
-            $this->message = $response['message'];
-        if (array_key_exists('description', $response))
-            $this->description = $response['description'];
-        if (array_key_exists('code', $response))
-            $this->code = $response['code'];
-
+        if (!is_null($message))
+            $this->message = $message;
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        $str = "message: " . $this->message . "\n";
-        $str .= "description: " . $this->description . "\n";
-        $str .= 'code: ' . $this->code;
-        return $str;
+        return (String)$this->message;
     }
+
 }

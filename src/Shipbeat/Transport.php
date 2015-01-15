@@ -96,13 +96,17 @@ class Shipbeat_Transport
 
         $headers = $this->getHeaders($result);
         $body = substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE));
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($code != 200)
+            $this->checkResponseCode($code, $body);
 
         curl_close($ch);
 
         // create response and set total_count if exists to Shipbeat
         if (array_key_exists('X-Total-Count', $headers)) {
             $response = new stdClass();
-            $response->pagination = array('total' => $headers['X-Total-Count']);
+            $response->pagination = array('total' => (int)$headers['X-Total-Count']);
             $response->data = json_decode($body);
         } else
             $response = json_decode($body);
@@ -165,6 +169,28 @@ class Shipbeat_Transport
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . base64_encode($authArray['username'] . ':' . $authArray['password']), 'Content-Length: 0']);
         $result = $this->curl_exec($ch);
 
-        return json_decode($result, true)['key'];
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($code != 200)
+            $this->checkResponseCode($code, $result);
+
+        return json_decode($result)->key;
+    }
+
+    /**
+     * @param $code
+     * @param $body
+     * @throws Shipbeat_Exception_APIFatalError
+     * @throws Shipbeat_Exception_APIError
+     */
+    private function checkResponseCode($code, $body)
+    {
+        $response = json_decode($body, true);
+        if ($code == 404)
+            throw new Shipbeat_Exception_APIError(['message'=>'Resource not found']);
+        if ((int)($code / 100) == 4)
+            throw new Shipbeat_Exception_APIError($response);
+        if ((int)($code / 100) == 5 )
+            throw new Shipbeat_Exception_APIFatalError($response['exception_message']);
     }
 }

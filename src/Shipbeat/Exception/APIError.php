@@ -1,18 +1,46 @@
 <?php
 
+/**
+ * Class Shipbeat_Exception_APIError
+ */
 class Shipbeat_Exception_APIError extends Shipbeat_Exception_Base
 {
+    /**
+     * @var string
+     */
+    protected $description = '';
 
-
-    public function __construct($message = 'Resource not found')
+    /**
+     * @param string $response
+     */
+    public function __construct($response)
     {
-        $this->message = $message;
+        if (array_key_exists('message', $response))
+            $this->message = $response['message'];
+        if (array_key_exists('description', $response))
+            $this->description = $response['description'];
+        if (array_key_exists('code', $response))
+            $this->code = $response['code'];
+
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return (String)$this->message;
+        $str = "message: " . $this->message . "\n";
+        $str .= "description: " . $this->description . "\n";
+        $str .= 'code: ' . $this->code;
+        return $str;
     }
 
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 }

@@ -8,12 +8,12 @@ class Shipbeat_Addresses
     /**
      * @var string
      */
-    private  $endpoint;
+    private $endpoint;
 
     /**
      * @var Shipbeat_Transport
      */
-    private  $request;
+    private $request;
 
     /**
      * @param $request
