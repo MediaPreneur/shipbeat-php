@@ -9,10 +9,13 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
      * @var Shipbeat
      */
     private $shipbeat;
+
     /**
-     * @var string
+     * @var string or array
      */
-    private $token = 'LEiyY7NYj2JRN58C04RfKn6P3u1';
+    private $authData = "Your Shipbeat API token or array('username' => Your username,
+    'password' => Your password)";
+
     /**
      * @var string
      */
@@ -23,81 +26,63 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->shipbeat = new Shipbeat($this->token, $this->mode);
+        $this->shipbeat = new Shipbeat($this->authData, $this->mode);
         parent::setUp();
     }
 
     /**
-     * Cleans test object after running tests
+     * test getting a label for accepted quoteZ
      */
-    public function testAreasAll()
+    public function testGetLabelForAcceptedQuote()
     {
-        $areas = $this->shipbeat->areas()->all();
-        $this->assertEquals(200, $areas['code']);
-    }
+        $itemsParams = array(
+            'item_template' => 'size_s',
+            'value' => 179
+        );
+        $items = $this->shipbeat->items()->create($itemsParams);
+        $this->assertNotNull($items);
+        $this->assertInstanceOf('stdClass', $items);
 
-    /**
-     * Test Areas all() method
-     */
-    public function testAreasAllWithParameters()
-    {
-        $params = array(
-            'country' => 'DK',
-            'q' => 'København',
-            'sort' => 'code',
-            'limit' => 5,
-            'offset' => 2);
-        $areas = $this->shipbeat->areas()->all($params);
-        $this->assertEquals(200, $areas['code']);
-        $this->assertEquals(5, sizeof($areas['response']));
-        $this->assertArrayHasKey('total_count', $areas);
-    }
-
-    /**
-     * Test Areas get() method
-     */
-    public function testAreasGet()
-    {
-        $areas = $this->shipbeat->areas()->get('eGp5QjMKkKITHcfyqIy7aB');
-        $this->assertEquals(200, $areas['code']);
-    }
-
-    /**
-     * Test Addresses create() and get() methods
-     */
-    public function testAddressesPostAndGet()
-    {
-        $params = array(
-            'name1' => 'Mindaugas Bujanauskas',
+        $AddressesParamsFrom = array(
+            'name1' => 'From',
             'name2' => 'Shipbeat',
-            'street1' => 'Forbindelsesvej 12, 2. th',
+            'street1' => 'From street',
             'postal_code' => '2100',
             'city' => 'København Ø',
             'country_code' => 'DK'
         );
+        $addressesFrom = $this->shipbeat->addresses()->create($AddressesParamsFrom);
+        $this->assertNotNull($addressesFrom);
+        $this->assertInstanceOf('stdClass', $addressesFrom);
 
-        $addresses = $this->shipbeat->addresses()->create($params);
-        $this->assertEquals(200, $addresses['code']);
-
-        $address = $this->shipbeat->addresses()->get($addresses['response']->id);
-        $this->assertEquals(200, $address['code']);
-    }
-
-    /**
-     * Test Items create() and get() methods
-     */
-    public function testItems()
-    {
-        $params = array(
-            'item_template' => 'size_s',
-            'value' => 179
+        $AddressesParamsTo = array(
+            'name1' => 'To',
+            'name2' => 'Shipbeat',
+            'street1' => 'To street',
+            'postal_code' => '2100',
+            'city' => 'København Ø',
+            'country_code' => 'DK'
         );
+        $addressesTo = $this->shipbeat->addresses()->create($AddressesParamsTo);
+        $this->assertNotNull($addressesTo);
+        $this->assertInstanceOf('stdClass', $addressesTo);
 
-        $items = $this->shipbeat->items()->create($params);
-        $this->assertEquals(200, $items['code']);
+        $quotesParams = array('delivery_option' => 'standard_delivery',
+            'item' => $items->id, 'from' => $addressesFrom->id, 'to' => $addressesTo->id);
+        $quotes = $this->shipbeat->quotes()->create($quotesParams);
+        $this->assertNotNull($quotes);
+        $this->assertInternalType('array', $quotes);
 
-        $item = $this->shipbeat->items()->get($items['response']->id);
-        $this->assertEquals(200, $item['code']);
+
+        $deliveriesParams = array('quote' => $quotes[0]->id);
+        $deliveries = $this->shipbeat->deliveries()->create($deliveriesParams);
+        $this->assertNotNull($deliveries);
+        $this->assertInstanceOf('stdClass', $deliveries);
+
+        $label = $this->shipbeat->labels()->get($deliveries->label_id);
+        $this->assertNotNull($label);
+        $this->assertInternalType('string', $label);
     }
+
 
 }
