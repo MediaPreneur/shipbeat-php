@@ -21,6 +21,16 @@ class Shipbeat_LabelsTest extends PHPUnit_Framework_TestCase
     private $expectedGetLabelForItem;
 
     /**
+    * @var string
+    */
+    private $expectedGetWithParameters;
+
+    /**
+    * @var string
+    */
+    private $expectedGetLabelForItemWithParameters;
+
+    /**
      * @var string
      */
     private $domain = 'domain';
@@ -43,6 +53,10 @@ class Shipbeat_LabelsTest extends PHPUnit_Framework_TestCase
         $this->expectedGet = $this->domain . '/' . $this->id;
         $this->expectedGetLabelForItem = $this->domain . '/' . $this->id . '/' .
             $this->item;
+        $this->expectedGetWithParameters = $this->expectedGet .
+        '?one=one&two=two';
+        $this->expectedGetLabelForItemWithParameters =
+        $this->expectedGetLabelForItem . '?one=one&two=two';
         $this->labels = new Shipbeat_Labels($this->domain);
         parent::setUp();
     }
@@ -66,11 +80,30 @@ class Shipbeat_LabelsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test create() method
+    * Test get() method
+    */
+    public function testGetWithParameters()
+    {
+      $result = $this->labels->get($this->id, array('one' => 'one', 'two' => 'two'));
+      $this->assertEquals($this->expectedGetWithParameters, $result);
+    }
+
+    /**
+     * Test getLabelForItem() method
      */
     public function testGetLabelForItem()
     {
         $result = $this->labels->getLabelForItem($this->id, $this->item);
         $this->assertEquals($this->expectedGetLabelForItem, $result);
+    }
+
+    /**
+    * Test getLabelForItem() method
+    */
+    public function testGetLabelForItemWithParameters()
+    {
+      $result = $this->labels->getLabelForItem($this->id, $this->item,
+      array('one' => 'one', 'two' => 'two'));
+      $this->assertEquals($this->expectedGetLabelForItemWithParameters, $result);
     }
 }
