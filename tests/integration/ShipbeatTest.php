@@ -16,7 +16,6 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
     private $authData = "Your Shipbeat API token or array('username' => Your username,
     'password' => Your password)";
 
-
     /**
      * @var string
      */
@@ -32,7 +31,7 @@ class ShipbeatTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * test getting a label for accepted quoteZ
+     * test getting a label for accepted quote
      */
     public function testGetLabelForAcceptedQuote()
     {
