@@ -28,7 +28,7 @@ class Shipbeat_DeliveryPoints
      * @param null $parameters
      * @return mixed
      */
-    public function all($parameters = [])
+    public function all($parameters = array())
     {
         if (!array_key_exists('limit', $parameters)) {
             $parameters['limit'] = 20;
@@ -44,7 +44,7 @@ class Shipbeat_DeliveryPoints
      * @param null $parameters
      * @return mixed
      */
-    public function get($id, $parameters = [])
+    public function get($id, $parameters = array())
     {
         return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }

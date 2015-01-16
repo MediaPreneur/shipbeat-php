@@ -29,7 +29,7 @@ class Shipbeat_CarrierServices
      * @param null $parameters
      * @return mixed
      */
-    public function get($id, $parameters = [])
+    public function get($id, $parameters = array())
     {
         return $this->request->get($this->endpoint . '/' . $id, $parameters);
     }

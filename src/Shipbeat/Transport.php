@@ -42,7 +42,7 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    public function get($endpoint, $parameters = [])
+    public function get($endpoint, $parameters = array())
     {
         return $this->baseRequestMethod($endpoint, 'GET', false, $parameters);
     }
@@ -52,7 +52,7 @@ class Shipbeat_Transport
      * @param null $postFields
      * @return array
      */
-    public function post($endpoint, $postFields = [])
+    public function post($endpoint, $postFields = array())
     {
         return $this->baseRequestMethod($endpoint, 'POST', false, $postFields);
     }
@@ -62,7 +62,7 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    public function getRaw($endpoint, $parameters = [])
+    public function getRaw($endpoint, $parameters = array())
     {
         return $this->baseRequestMethod($endpoint, 'GET', true, $parameters);
     }
@@ -73,79 +73,24 @@ class Shipbeat_Transport
      * @param null $parameters
      * @return array
      */
-    private function baseRequestMethod($endpoint, $method, $isRaw, $parameters = [])
+    private function baseRequestMethod($endpoint, $method, $isRaw, $parameters = array())
     {
         $ch = curl_init();
 
-        // prepare parameters
-        if (!empty($parameters)) {
-            $queryParameters = http_build_query($parameters);
-            if ($method == 'POST') {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $queryParameters);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen
-                ($queryParameters)));
-            }
-            if ($method == 'GET') {
-                $endpoint = $endpoint . '?' . $queryParameters;
-            }
-        } elseif ((empty($parameters)) && $method == 'POST') {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: 0'));
+        // prepare query
+        if ($method == 'POST') {
+            $this->preparePostQuery($ch, $parameters);
+        } elseif ($method == 'GET') {
+            $endpoint = $this->prepareGetQuery($endpoint, $parameters);
         }
 
+        $this->setSSLVerification($ch);
+        $this->setCommonCurlOptions($ch, $endpoint, $method);
 
-        // set verification only in live mode
-        if ($this->mode == 'test') {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        }
-
-        curl_setopt($ch, CURLOPT_URL, $this->domain . '/' . $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->token);
         if ($isRaw) {
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-        } else {
-            curl_setopt($ch, CURLOPT_HEADER, 1);
+            return $this->createRawResponse($ch);
         }
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-
-        $result = $this->curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($isRaw && $code == 200) {
-            curl_close($ch);
-            return $result;
-        }
-
-        $headers = $this->getHeaders($result);
-        $body = substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE));
-
-        curl_close($ch);
-
-        if ($code != 200) {
-            $this->checkResponseCode($code, $body);
-        }
-
-        // create response and set total_count if exists
-        if (array_key_exists('X-Total-Count', $headers)) {
-            $response = new stdClass();
-            $response->pagination = array('total' => (int)$headers['X-Total-Count'],
-                'limit' => $parameters['limit'], 'offset' => $parameters['offset']);
-//            }
-            $response->data = json_decode($body);
-            $response->count = count($response->data);
-        } else {
-            $response = json_decode($body);
-            if (is_array($response)) {
-                $newResponse = new stdClass();
-                $newResponse->count = count($response);
-                $newResponse->data = $response;
-                $response = $newResponse;
-            }
-        }
-        return $response;
+        return $this->createResponse($ch, $parameters);
     }
 
     /**
@@ -232,5 +177,132 @@ class Shipbeat_Transport
         if ((int)($code / 100) == 5) {
             throw new Shipbeat_Exception_APIFatalError($response['exception_message']);
         }
+    }
+
+    /**
+     * @param $ch
+     * @param array $parameters
+     */
+    private function preparePostQuery(&$ch, $parameters = array())
+    {
+        if (!empty($parameters)) {
+            $queryParameters = http_build_query($parameters);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $queryParameters);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen
+            ($queryParameters)));
+        } else {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: 0'));
+        }
+    }
+
+    /**
+     * @param $endpoint
+     * @param array $parameters
+     * @return string
+     */
+    private function prepareGetQuery($endpoint, $parameters = array())
+    {
+        if (!empty($parameters)) {
+            $queryParameters = http_build_query($parameters);
+            $endpoint = $endpoint . '?' . $queryParameters;
+        }
+        return $endpoint;
+    }
+
+    /**
+     * @param $ch
+     */
+    private function setSSLVerification(&$ch)
+    {
+        if ($this->mode == 'test') {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        }
+    }
+
+    /**
+     * @param $ch
+     * @param $endpoint
+     * @param $method
+     */
+    private function setCommonCurlOptions(&$ch, $endpoint, $method)
+    {
+        curl_setopt($ch, CURLOPT_URL, $this->domain . '/' . $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->token);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+    }
+
+    /**
+     * @param $ch
+     * @return mixed
+     */
+    private function createRawResponse(&$ch)
+    {
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        $result = $this->curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        if ($code != 200) {
+            $this->checkResponseCode($code, $result);
+        }
+        return $result;
+    }
+
+    /**
+     * @param $headers
+     * @param $body
+     * @param $parameters
+     * @return mixed|stdClass
+     */
+    private function createResponse(&$ch, $parameters)
+    {
+        $result = $this->curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $headers = $this->getHeaders($result);
+        $body = substr($result, $this->curl_getinfo($ch, CURLINFO_HEADER_SIZE));
+
+        curl_close($ch);
+
+        if ($code != 200) {
+            $this->checkResponseCode($code, $body);
+        }
+
+        // decode json body and create response type
+        $jsonBody = json_decode($body);
+        if (array_key_exists('X-Total-Count', $headers)) {
+            return $this->createCollectionResponseWithTotalCount($headers, $jsonBody,
+                $parameters);
+        } elseif (is_array($jsonBody)) {
+            return $this->createCollectionResponse($jsonBody);
+        }
+        // returning regular response (stdClass)
+        return $jsonBody;
+    }
+
+    private function createCollectionResponseWithTotalCount($headers, $jsonBody,
+                                                            $parameters)
+    {
+        $response = new stdClass();
+        $response->pagination = array('total' => (int)$headers['X-Total-Count'],
+            'limit' => $parameters['limit'], 'offset' => $parameters['offset']);
+        $response->data = $jsonBody;
+        $response->count = count($response->data);
+        return $response;
+    }
+
+    private function createCollectionResponse($jsonBody)
+    {
+        $response = new stdClass();
+        $response->count = count($jsonBody);
+        $response->data = $jsonBody;
+        return $response;
     }
 }
