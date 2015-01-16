@@ -11,7 +11,7 @@ class Shipbeat_Exception_APIError extends Shipbeat_Exception_Base
     protected $description = '';
 
     /**
-     * @param string $response
+     * @param array $response
      */
     public function __construct($response)
     {

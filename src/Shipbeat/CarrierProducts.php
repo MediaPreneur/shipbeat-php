@@ -24,10 +24,11 @@ class Shipbeat_CarrierProducts
         $this->endpoint = 'carriers/products';
     }
 
+
     /**
      * @param $id
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function get($id, $parameters = array())
     {

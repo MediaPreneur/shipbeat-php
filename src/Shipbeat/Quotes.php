@@ -26,8 +26,8 @@ class Shipbeat_Quotes
 
     /**
      * @param $id
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function get($id, $parameters = array())
     {
@@ -35,8 +35,8 @@ class Shipbeat_Quotes
     }
 
     /**
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function create($parameters = array())
     {

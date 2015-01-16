@@ -20,7 +20,7 @@ class Shipbeat_Labels
 
     /**
      * @param $id
-     * @param null $parameters
+     * @param array $parameters
      * @return string
      */
     public function get($id, $parameters = array())
@@ -35,7 +35,7 @@ class Shipbeat_Labels
     /**
      * @param $labelId
      * @param $itemId
-     * @param null $parameters
+     * @param array $parameters
      * @return string
      */
     public function getLabelForItem($labelId, $itemId, $parameters = array())

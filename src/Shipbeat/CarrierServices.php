@@ -26,8 +26,8 @@ class Shipbeat_CarrierServices
 
     /**
      * @param $id
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function get($id, $parameters = array())
     {

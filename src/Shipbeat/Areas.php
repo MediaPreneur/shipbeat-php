@@ -24,9 +24,10 @@ class Shipbeat_Areas
         $this->endpoint = 'areas';
     }
 
+
     /**
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function all($parameters = array())
     {
@@ -39,10 +40,11 @@ class Shipbeat_Areas
         return $this->request->get($this->endpoint, $parameters);
     }
 
+
     /**
      * @param $id
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function get($id, $parameters = array())
     {

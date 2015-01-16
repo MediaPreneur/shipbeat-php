@@ -33,14 +33,12 @@ class Shipbeat_Transport
         } else {
             $this->token = $authData;
         }
-
-
     }
 
     /**
      * @param $endpoint
-     * @param null $parameters
-     * @return array
+     * @param array $parameters
+     * @return mixed|stdClass
      */
     public function get($endpoint, $parameters = array())
     {
@@ -49,8 +47,8 @@ class Shipbeat_Transport
 
     /**
      * @param $endpoint
-     * @param null $postFields
-     * @return array
+     * @param array $postFields
+     * @return mixed|stdClass
      */
     public function post($endpoint, $postFields = array())
     {
@@ -59,8 +57,8 @@ class Shipbeat_Transport
 
     /**
      * @param $endpoint
-     * @param null $parameters
-     * @return array
+     * @param array $parameters
+     * @return mixed|stdClass
      */
     public function getRaw($endpoint, $parameters = array())
     {
@@ -70,8 +68,9 @@ class Shipbeat_Transport
     /**
      * @param $endpoint
      * @param $method
-     * @param null $parameters
-     * @return array
+     * @param $isRaw
+     * @param array $parameters
+     * @return mixed|stdClass
      */
     private function baseRequestMethod($endpoint, $method, $isRaw, $parameters = array())
     {
@@ -287,6 +286,12 @@ class Shipbeat_Transport
         return $jsonBody;
     }
 
+    /**
+     * @param $headers
+     * @param $jsonBody
+     * @param $parameters
+     * @return stdClass
+     */
     private function createCollectionResponseWithTotalCount($headers, $jsonBody,
                                                             $parameters)
     {
@@ -298,6 +303,10 @@ class Shipbeat_Transport
         return $response;
     }
 
+    /**
+     * @param $jsonBody
+     * @return stdClass
+     */
     private function createCollectionResponse($jsonBody)
     {
         $response = new stdClass();

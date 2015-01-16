@@ -25,8 +25,8 @@ class Shipbeat_Carriers
     }
 
     /**
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function all($parameters = array())
     {
@@ -41,8 +41,8 @@ class Shipbeat_Carriers
 
     /**
      * @param $id
-     * @param null $parameters
-     * @return mixed
+     * @param array $parameters
+     * @return array
      */
     public function get($id, $parameters = array())
     {
