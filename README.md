@@ -59,7 +59,7 @@ require_once __DIR__ . '/vendor/shipbeat/shipbeat-php/bootstrap.php';
 ####PHP < 5.3.0
 
 ```php
-require_once dirname(__FILE__) . '/vendor/shipbeat/shipbeat-php/bootstrap.php';
+require_once('pathToShipbeat/bootstrap.php');
 ```
 
 ##Examples
