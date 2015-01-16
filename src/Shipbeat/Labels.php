@@ -36,7 +36,8 @@ class Shipbeat_Labels
      */
     public function getLabelForItem($labelId, $itemId, $parameters = array())
     {
-        return $this->domain . '/' . $labelId . '/' . $itemId . $this->buildQueryParameters($parameters);
+        return $this->domain . '/' . $labelId . '/' . $itemId .
+        $this->buildQueryParameters($parameters);
     }
 
    /**
