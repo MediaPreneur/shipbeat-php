@@ -254,9 +254,9 @@ class Shipbeat_Transport
         return $result;
     }
 
+
     /**
-     * @param $headers
-     * @param $body
+     * @param $ch
      * @param $parameters
      * @return mixed|stdClass
      */
@@ -285,6 +285,7 @@ class Shipbeat_Transport
         // returning regular response (stdClass)
         return $jsonBody;
     }
+
 
     /**
      * @param $headers
