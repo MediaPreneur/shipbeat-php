@@ -50,14 +50,6 @@ If you don't want to use Composer, just download the library in your project via
 
 To load the Shipbeat library from your project's root folder you need to require Shipbeat's bootstrap script like this:
 
-####PHP >= 5.3.0
-
-```php
-require_once __DIR__ . '/vendor/shipbeat/shipbeat-php/bootstrap.php';
-```
-
-####PHP < 5.3.0
-
 ```php
 require_once('pathToShipbeat/bootstrap.php');
 ```
@@ -109,7 +101,7 @@ $addressesTo = $shipbeat->addresses()->create($AddressesParamsTo);
 //create available delivery quotes
 $quotesParams = array('delivery_option' => 'standard_delivery',
     'item' => $items->id, 'from' => $addressesFrom->id, 'to' => $addressesTo->id);
-$quotes = $shipbeat->quotes()->create($quotesParams);`
+$quotes = $shipbeat->quotes()->create($quotesParams);
 ```
 
 ### Accepting a quote (creating a delivery)
