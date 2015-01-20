@@ -57,26 +57,18 @@ class Shipbeat
 
     /**
      * @param $authData
-     * @param null $mode
-     * @param null $domain
+     * @param string $mode
      */
-    public function __construct($authData, $mode = 'production', $domain = null)
+    public function __construct($authData, $mode = 'production')
     {
-        if (is_null($domain)) {
-            if ($mode == 'test') {
-                $domain = 'https://test.api.shipbeat.com';
-            } else {
-                $domain = 'https://api.shipbeat.com';
-            }
-        }
-
         if ($mode == 'test') {
+            $domain = 'https://test.api.shipbeat.com';
             $labelDomain = 'https://test.label.shipbeat.com';
         } else {
+            $domain = 'https://api.shipbeat.com';
             $labelDomain = 'https://label.shipbeat.com';
         }
-
-
+        
         $request = new Shipbeat_Transport($authData, $mode, $domain);
 
         $this->items = new Shipbeat_Items($request);
