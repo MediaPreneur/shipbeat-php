@@ -61,6 +61,7 @@ class Shipbeat
      */
     public function __construct($authData, $mode = 'production')
     {
+        // Determine correct domains based on environment
         if ($mode == 'test') {
             $domain = 'https://test.api.shipbeat.com';
             $labelDomain = 'https://test.label.shipbeat.com';
@@ -68,9 +69,12 @@ class Shipbeat
             $domain = 'https://api.shipbeat.com';
             $labelDomain = 'https://label.shipbeat.com';
         }
-        
+
+        // Initialize the transport class, which is the main gateway between
+        // the developer's code and Shipbeat API
         $request = new Shipbeat_Transport($authData, $mode, $domain);
 
+        // Initialize an instance of each available resource
         $this->items = new Shipbeat_Items($request);
         $this->areas = new Shipbeat_Areas($request);
         $this->deliveryPoints = new Shipbeat_DeliveryPoints($request);
