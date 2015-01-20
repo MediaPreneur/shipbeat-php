@@ -24,7 +24,6 @@ class Shipbeat_Areas
         $this->endpoint = 'areas';
     }
 
-
     /**
      * @param array $parameters
      * @return array
@@ -34,9 +33,11 @@ class Shipbeat_Areas
         if (!array_key_exists('limit', $parameters)) {
             $parameters['limit'] = 20;
         }
+
         if (!array_key_exists('offset', $parameters)) {
             $parameters['offset'] = 0;
         }
+
         return $this->request->get($this->endpoint, $parameters);
     }
 

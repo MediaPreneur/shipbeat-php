@@ -33,9 +33,11 @@ class Shipbeat_Carriers
         if (!array_key_exists('limit', $parameters)) {
             $parameters['limit'] = 20;
         }
+
         if (!array_key_exists('offset', $parameters)) {
             $parameters['offset'] = 0;
         }
+
         return $this->request->get($this->endpoint, $parameters);
     }
 

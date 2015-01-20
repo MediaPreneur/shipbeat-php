@@ -10,9 +10,10 @@ class Shipbeat_Exception_APIFatalError extends Shipbeat_Exception_Base
      */
     public function __construct($message = null)
     {
-        if (!is_null($message)) {
+        if ( ! is_null($message)) {
             $this->message = $message;
         }
+
         parent::__construct();
     }
 

@@ -18,9 +18,11 @@ class Shipbeat_Exception_APIError extends Shipbeat_Exception_Base
         if (array_key_exists('message', $response)) {
             $this->message = $response['message'];
         }
+
         if (array_key_exists('description', $response)) {
             $this->description = $response['description'];
         }
+
         if (array_key_exists('code', $response)) {
             $this->code = $response['code'];
         }
