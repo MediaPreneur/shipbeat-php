@@ -60,13 +60,12 @@ class Shipbeat
      * @param null $mode
      * @param null $domain
      */
-    public function __construct($authData, $mode = null, $domain = null)
+    public function __construct($authData, $mode = 'production', $domain = null)
     {
         if (is_null($domain)) {
             if ($mode == 'test') {
                 $domain = 'https://test.api.shipbeat.com';
             } else {
-                $mode = 'live';
                 $domain = 'https://api.shipbeat.com';
             }
         }
