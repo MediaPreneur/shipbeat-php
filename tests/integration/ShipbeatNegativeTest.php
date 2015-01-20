@@ -13,8 +13,10 @@ class ShipbeatNegativeTest extends PHPUnit_Framework_TestCase
     /**
      * @var string or array
      */
-    private $authData = array('username' => 'wrong username',
-    'password' => 'wrong password');
+    private $authData = array(
+        'username' => 'wrong username',
+        'password' => 'wrong password'
+    );
 
     /**
      * @var string
