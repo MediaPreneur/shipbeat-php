@@ -59,24 +59,24 @@ require_once('pathToShipbeat/bootstrap.php');
 ### Getting delivery quote
 
 ```php
-//set your auhorization data
+// Set your authentication data
 $authData = //"Your Shipbeat API token or array('username' => Your username,
 //    'password' => Your password)";
 
-//set mode to test
+// Set mode to test while in development
 $mode = 'test';
 
-//create a Shipbeat API instance with mode and authorization data
+// Create a Shipbeat API instance with mode and authorization data
 $shipbeat = new Shipbeat($authData, $mode);
 
-//create an item that will be delivered
+// Create an item that will be delivered
 $itemsParams = array(
     'item_template' => 'size_s',
     'value' => 179
 );
 $items = $shipbeat->items()->create($itemsParams);
 
-//create a pick up address that the carrier will take the item from 
+// Create a pick up address that the carrier will take the item from 
 $AddressesParamsFrom = array(
     'name1' => 'From',
     'name2' => 'Shipbeat',
@@ -87,7 +87,7 @@ $AddressesParamsFrom = array(
 );
 $addressesFrom = $shipbeat->addresses()->create($AddressesParamsFrom);
 
-//create a delivery address that the carrier will deliver the item to
+// Create a delivery address that the carrier will deliver the item to
 $AddressesParamsTo = array(
     'name1' => 'To',
     'name2' => 'Shipbeat',
@@ -98,7 +98,7 @@ $AddressesParamsTo = array(
 );
 $addressesTo = $shipbeat->addresses()->create($AddressesParamsTo);
 
-//create available delivery quotes
+// Create available delivery quotes
 $quotesParams = array('delivery_option' => 'standard_delivery',
     'item' => $items->id, 'from' => $addressesFrom->id, 'to' => $addressesTo->id);
 $quotes = $shipbeat->quotes()->create($quotesParams);
@@ -107,7 +107,7 @@ $quotes = $shipbeat->quotes()->create($quotesParams);
 ### Accepting a quote (creating a delivery)
 
 ```php
-//create a delievery with the first quote from the available delivery quotes
+// Create a delivery with the first quote from the available delivery quotes
 $deliveriesParams = array('quote' => $quotes->data[0]->id);
 $delivery = $shipbeat->deliveries()->create($deliveriesParams);
 ```
@@ -115,7 +115,7 @@ $delivery = $shipbeat->deliveries()->create($deliveriesParams);
 ### Getting a label for accepted quote
 
 ```php
-//getting all labels for a delivery
+// Getting all labels for a delivery
 $label = $shipbeat->labels()->get($delivery->label_id);
 ```
 
