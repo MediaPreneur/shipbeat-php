@@ -70,46 +70,46 @@ $mode = 'test';
 $shipbeat = new Shipbeat($authData, $mode);
 
 // Create an item that will be delivered
-$itemsParams = array(
+$item = $shipbeat->items()->create(array(
     'item_template' => 'size_s',
     'value' => 179
-);
-$items = $shipbeat->items()->create($itemsParams);
+));
 
-// Create a pick up address that the carrier will take the item from 
-$AddressesParamsFrom = array(
+// Create a pick up address that the carrier will take the item from
+$addressFrom = $shipbeat->addresses()->create(array(
     'name1' => 'From',
     'name2' => 'Shipbeat',
     'street1' => 'From street',
     'postal_code' => '2100',
     'city' => 'København Ø',
     'country_code' => 'DK'
-);
-$addressesFrom = $shipbeat->addresses()->create($AddressesParamsFrom);
+));
 
 // Create a delivery address that the carrier will deliver the item to
-$AddressesParamsTo = array(
+$addressTo = $shipbeat->addresses()->create(array(
     'name1' => 'To',
     'name2' => 'Shipbeat',
     'street1' => 'To street',
     'postal_code' => '2100',
     'city' => 'København Ø',
     'country_code' => 'DK'
-);
-$addressesTo = $shipbeat->addresses()->create($AddressesParamsTo);
+));
 
 // Create available delivery quotes
-$quotesParams = array('delivery_option' => 'standard_delivery',
-    'item' => $items->id, 'from' => $addressesFrom->id, 'to' => $addressesTo->id);
-$quotes = $shipbeat->quotes()->create($quotesParams);
+$quotes = $shipbeat->quotes()->create(array(
+    'item' => $item->id,
+    'from' => $addressFrom->id,
+    'to' => $addressTo->id
+));
 ```
 
 ### Accepting a quote (creating a delivery)
 
 ```php
 // Create a delivery with the first quote from the available delivery quotes
-$deliveriesParams = array('quote' => $quotes->data[0]->id);
-$delivery = $shipbeat->deliveries()->create($deliveriesParams);
+$delivery = $shipbeat->deliveries()->create(array(
+    'quote' => $quotes->data[0]->id
+));
 ```
 
 ### Getting a label for accepted quote
