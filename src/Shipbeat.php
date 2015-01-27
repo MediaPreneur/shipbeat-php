@@ -172,4 +172,12 @@ class Shipbeat
     {
         return $this->carrierProducts;
     }
+
+    /**
+     * @return Shipbeat_Shops
+     */
+    public function shops()
+    {
+        return $this->shops;
+    }
 }
