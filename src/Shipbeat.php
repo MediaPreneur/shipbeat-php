@@ -61,7 +61,7 @@ class Shipbeat
     private $shops;
 
     /**
-     * @param $authData
+     * @param string|array $authData
      * @param string $mode
      */
     public function __construct($authData, $mode = 'production')
