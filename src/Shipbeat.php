@@ -56,6 +56,11 @@ class Shipbeat
     private $carrierProducts;
 
     /**
+     * @var Shipbeat_Shops
+     */
+    private $shops;
+
+    /**
      * @param $authData
      * @param string $mode
      */
@@ -85,6 +90,7 @@ class Shipbeat
         $this->carriers = new Shipbeat_Carriers($request);
         $this->carrierServices = new Shipbeat_CarrierServices($request);
         $this->carrierProducts = new Shipbeat_CarrierProducts($request);
+        $this->shops = new Shipbeat_Shops($request);
     }
 
     /**
