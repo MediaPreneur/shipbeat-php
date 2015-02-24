@@ -7,7 +7,7 @@ Shipbeat API wrapper for PHP
 
 ## Getting started
 
-- If you are not familiar with Shipbeat, start with the [documentation](http://shipbeat.com/#benefits).
+- If you are not familiar with Shipbeat, start with [our website](http://shipbeat.com/).
 - Install the latest release.
 - Check the API [reference](http://docs.shipbeat.com/).
 - Check the examples.
