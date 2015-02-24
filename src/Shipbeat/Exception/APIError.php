@@ -11,23 +11,27 @@ class Shipbeat_Exception_APIError extends Shipbeat_Exception_Base
     protected $description = '';
 
     /**
-     * @param array $response
+     * @param array     $response
+     * @param int       $code
+     * @param Exception $previous
      */
-    public function __construct($response)
+    public function __construct($response, $code = 0, Exception $previous = null)
     {
+        $message = '';
+
         if (array_key_exists('message', $response)) {
-            $this->message = $response['message'];
+            $message = $response['message'];
+        }
+
+        if (array_key_exists('code', $response)) {
+            $code = $response['code'];
         }
 
         if (array_key_exists('description', $response)) {
             $this->description = $response['description'];
         }
 
-        if (array_key_exists('code', $response)) {
-            $this->code = $response['code'];
-        }
-
-        parent::__construct();
+        parent::__construct($message, $code, $previous);
     }
 
     /**
@@ -35,9 +39,9 @@ class Shipbeat_Exception_APIError extends Shipbeat_Exception_Base
      */
     public function __toString()
     {
-        $str = "message: " . $this->message . "\n";
-        $str .= "description: " . $this->description . "\n";
-        $str .= 'code: ' . $this->code;
+        $str  = "Message: " . $this->message . "\n";
+        $str .= "Description: " . $this->description . "\n";
+        $str .= 'Code: ' . $this->code;
         return $str;
     }
 

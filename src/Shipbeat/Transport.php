@@ -194,8 +194,9 @@ class Shipbeat_Transport
         // to create an error message ourselves
         if ($code == 404) {
             throw new Shipbeat_Exception_APIError(array(
-                'message' => 'Resource not found')
-            );
+                'message' => 'Resource not found',
+                'code'    => $code,
+            ));
         }
 
         // 4xx error codes map directly to `Shipbeat_Exception_APIError` class
@@ -206,7 +207,7 @@ class Shipbeat_Transport
         // 5xx errors are not Shipbeat API friendly errors, but we can still map
         // them
         if ((int)($code / 100) == 5) {
-            throw new Shipbeat_Exception_APIFatalError($response['exception_message']);
+            throw new Shipbeat_Exception_APIFatalError($response['message'], $code);
         }
     }
 
