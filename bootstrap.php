@@ -13,4 +13,4 @@ function shipbeatAutoload($class) {
     return false;
 }
 
-spl_autoload_register('shipbeatAutoload');
+spl_autoload_register('shipbeatAutoload', true, true);
