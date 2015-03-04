@@ -267,7 +267,6 @@ class Shipbeat_Transport
     {
         curl_setopt($ch, CURLOPT_URL, $this->domain . '/' . $endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_USERPWD, $this->token);
         curl_setopt($ch, CURLOPT_HEADER, 1);
