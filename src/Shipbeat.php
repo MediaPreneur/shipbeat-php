@@ -69,7 +69,7 @@ class Shipbeat
         // Determine correct domains based on environment
         if ($mode == 'test') {
             $domain = 'https://api.test.shipbeat.com';
-            $labelDomain = 'https://test.label.shipbeat.com';
+            $labelDomain = 'https://label.test.shipbeat.com';
         } else {
             $domain = 'https://api.shipbeat.com';
             $labelDomain = 'https://label.shipbeat.com';
