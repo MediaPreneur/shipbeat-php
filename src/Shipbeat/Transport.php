@@ -87,7 +87,6 @@ class Shipbeat_Transport
         }
 
         // Set common options
-        $this->setSSLVerification($ch);
         $this->setCommonCurlOptions($ch, $endpoint, $method);
 
         // Return unmodified response (for example when downloading PDF data)
@@ -243,19 +242,6 @@ class Shipbeat_Transport
         }
 
         return $endpoint;
-    }
-
-    /**
-     * @param $ch
-     */
-    private function setSSLVerification(&$ch)
-    {
-        // In test environment we don't want to verify SSL peer
-        if ($this->mode == 'test') {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        }
     }
 
     /**
